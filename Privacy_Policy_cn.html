@@ -1,0 +1,1497 @@
+
+<html>
+<head>
+
+
+    <style>@charset "UTF-8";
+    /* these are overridden inline in the mustache compilation */
+    :root {
+        --background-color: #ffffff;
+        --poweredbybg-color: #f0f0f0;
+        --text-color: #000000;
+        --link-color: #008DD5;
+        --linkhover-color: #005A88;
+        --main-font: "Arvo";
+    }
+
+    .editing-active {
+        transition: all 0.2s ease-in-out;
+        border: 3px dotted rgba(0, 0, 0, 0.2);
+    }
+    .editing-active:hover {
+        border-color: rgba(31, 175, 132, 0.8);
+        background-color: rgba(31, 175, 132, 0.3);
+        cursor: pointer;
+    }
+
+    .placeholder-text {
+        font-style: italic;
+        opacity: 0.6;
+    }
+
+    * {
+        font-family: var(--main-font);
+        font-weight: 400;
+        color: var(--text-color);
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        -webkit-font-feature-settings: "pnum";
+        font-feature-settings: "pnum";
+        font-variant-numeric: proportional-nums;
+        position: relative;
+        background: #fff;
+    }
+
+    a {
+        color: var(--link-color);
+        transition: all 0.2s linear;
+    }
+    a:focus, a:hover {
+        color: var(--linkhover-color);
+    }
+    a.nohover:hover {
+        text-decoration: none;
+    }
+
+    .claim-bar {
+        padding: 12px 0;
+        background: #fff;
+        color: #555;
+        font-family: "Oxygen", Helvetica, sans-serif;
+        transition: all 0.3s ease-in-out;
+    }
+    .claim-bar * {
+        font-family: "Oxygen", Helvetica, sans-serif;
+    }
+    .claim-bar div {
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        font-size: 0.9em;
+        cursor: pointer;
+        color: #555;
+    }
+    .claim-bar div span {
+        transition: all 0.3s ease-in-out;
+        color: #008DD5;
+    }
+    .claim-bar:hover {
+        text-decoration: none;
+        text-decoration: none;
+        background: #008DD5;
+        color: white;
+    }
+    .claim-bar:hover div {
+        color: white;
+    }
+    .claim-bar:hover div span {
+        color: white;
+    }
+
+    .whitelabel-badge-mobile {
+        background: white;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+        border-radius: 4px;
+        text-align: center;
+        -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: 0.2s all ease-in-out;
+    }
+    .whitelabel-badge-mobile .wl-label {
+        font-size: 0.8em;
+        color: #777;
+    }
+    .whitelabel-badge-mobile * {
+        transition: 0.2s all ease-in-out;
+    }
+    .whitelabel-badge-mobile .st0 {
+        fill: #1FAF84;
+    }
+    .whitelabel-badge-mobile:hover {
+        background: #1FAF84;
+    }
+    .whitelabel-badge-mobile:hover * {
+        color: white;
+    }
+    .whitelabel-badge-mobile:hover .st0 {
+        fill: #ffffff;
+    }
+    @media (min-width: 491px) {
+        .whitelabel-badge-mobile {
+            display: none;
+        }
+    }
+
+    .promo-badge {
+        display: block;
+        position: relative;
+        background: white;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        text-align: left;
+        transition: 0.2s all ease-in-out;
+        cursor: pointer;
+    }
+    .promo-badge * {
+        font-family: "Oxygen", Helvetica, sans-serif;
+        transition: 0.2s all ease-in-out;
+        line-height: normal;
+        text-align: left;
+    }
+    .promo-badge .pb-loading-container {
+        padding: 0.5em;
+    }
+    .promo-badge .pb-loading-container .lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 40px;
+        height: 40px;
+    }
+    .promo-badge .pb-loading-container .lds-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        margin: 4px;
+        border: 4px solid #ddd;
+        border-radius: 50%;
+        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: #ddd transparent transparent transparent;
+    }
+    .promo-badge .pb-loading-container .lds-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+    }
+    .promo-badge .pb-loading-container .lds-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+    }
+    .promo-badge .pb-loading-container .lds-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+    }
+    @keyframes lds-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .promo-badge .pb-main-container {
+        display: none;
+        flex-direction: row;
+    }
+    .promo-badge .pb-main-container .pb-text-container {
+        flex: 1;
+        padding-right: 0.5em;
+        align-self: center;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-h1 span {
+        color: #555;
+        font-size: 1.2em;
+        margin-right: 0.2em;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-h1 .pb-ios {
+        width: 16px;
+        height: 16px;
+        fill: #ccc;
+        margin-bottom: -1px;
+        display: none;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-h1 .pb-android {
+        width: 15px;
+        height: 15px;
+        fill: #ccc;
+        stroke: #ccc;
+        margin-bottom: -1px;
+        display: none;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-h2 {
+        color: #888;
+        font-size: 0.9em;
+        margin-top: -2px;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-by {
+        font-size: 0.7em;
+        text-transform: uppercase;
+        text-align: left;
+        margin-top: 4px;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-by a {
+        color: #aaa;
+    }
+    .promo-badge .pb-main-container .pb-text-container .pb-by a:hover {
+        color: #25d5a1;
+        text-decoration: none;
+    }
+    .promo-badge .pb-main-container img {
+        width: 58px;
+        height: 58px;
+        border-radius: 8px;
+        margin-right: 0.75em;
+        align-self: center;
+        border: none;
+        display: none;
+    }
+    @media (min-width: 600px) {
+        .promo-badge {
+            position: fixed;
+            z-index: 999999999;
+            top: 10px;
+            right: 10px;
+            border-radius: 8px;
+            -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+    }
+
+    footer {
+        background: #222;
+    }
+    footer .editing-active {
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+    footer p {
+        color: #777 !important;
+    }
+    footer .social-icons {
+        background: #222;
+        width: auto;
+        display: inline-block;
+    }
+    footer .social-icons .social-icon {
+        transition: opacity 0.2s ease-in-out;
+        display: inline-block;
+        width: 32px;
+        margin-right: 12px;
+        opacity: 0.5;
+        padding-top: 30px;
+    }
+    footer .social-icons .social-icon path, footer .social-icons .social-icon polygon {
+        transition: all 0.2s linear;
+        fill: white;
+    }
+    footer .social-icons .social-icon:hover {
+        opacity: 1;
+    }
+    footer .social-icons .social-icon.si-muted {
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+    }
+    footer .social-icons .social-icon.si-muted path, footer .social-icons .social-icon.si-muted polygon {
+        transition: all 0.2s linear;
+        fill: rgba(255, 255, 255, 0.3);
+    }
+    footer .social-icons.editing-active {
+        margin-top: 30px;
+        padding: 10px;
+        margin-left: -10px;
+    }
+    footer .social-icons.editing-active .social-icon {
+        padding-top: 0;
+    }
+    footer .footer-store-button-container {
+        text-align: right;
+        margin: auto;
+        vertical-align: middle;
+    }
+    @media (max-width: 767px) {
+        footer .footer-store-button-container {
+            text-align: center;
+        }
+    }
+    footer .footer-store-button-container .footer-store-button {
+        padding-top: 2em;
+        padding-bottom: 2em;
+        display: inline-block;
+    }
+    footer .footer-store-button-container .footer-store-button .store-button {
+        height: auto !important;
+        margin: 0 6px;
+    }
+    footer .footer-store-button-container .footer-store-button .store-button img {
+        height: 50px !important;
+    }
+
+    #header .store-button img {
+        height: 60px !important;
+    }
+
+    #attribution {
+        transition: all 0.2s ease-in-out;
+        padding: 2em 0;
+        font-size: 0.8em;
+        color: #888 !important;
+    }
+    #attribution p {
+        margin-bottom: 0.45em;
+        font-size: 1.1em;
+    }
+    #attribution a {
+        color: #aaa !important;
+        text-decoration: none;
+    }
+    #attribution a:hover {
+        color: #007bff !important;
+    }
+
+    h1 {
+        font-size: 3.2em;
+        margin-bottom: 0;
+        font-weight: bold;
+        letter-spacing: 0.05em;
+    }
+
+    h2 {
+        margin-top: 0.2em;
+        margin-bottom: 0.3em;
+        font-size: 1.8em;
+    }
+
+    h3 {
+        font-weight: normal;
+        font-size: 16px;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: 100%;
+        color: var(--text-color);
+        text-align: center;
+    }
+
+    .cover-container {
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .cover {
+        padding: 0 1.5rem;
+    }
+    .cover .btn-lg {
+        padding: 0.75rem 1.25rem;
+        font-weight: 700;
+    }
+
+    p[id="text.line2"] {
+        margin-bottom: 0 !important;
+    }
+
+    .site-wrapper {
+        position: relative;
+        background-size: cover;
+        min-height: 100vh;
+    }
+    .site-wrapper .editing-active {
+        border-color: var(--text-color);
+    }
+    .site-wrapper .site-wrapper-background {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        opacity: 0.9;
+        background-color: var(--background-color);
+    }
+    .site-wrapper .site-wrapper-inner {
+        padding-top: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: 100vh;
+    }
+    @media (min-width: 767px) {
+        .site-wrapper .site-wrapper-inner {
+            padding-top: 0;
+        }
+    }
+    .site-wrapper .site-wrapper-inner .arrows {
+        width: 60px;
+        height: 32px;
+        position: absolute;
+        left: 50%;
+        margin-left: -30px;
+        bottom: 15px;
+        opacity: 0.5;
+    }
+    @media (max-width: 786px) {
+        .site-wrapper .site-wrapper-inner .arrows {
+            display: none;
+        }
+    }
+    .site-wrapper .site-wrapper-inner .arrows path {
+        stroke: var(--text-color);
+        fill: transparent;
+        stroke-width: 2px;
+    }
+
+    @media (min-width: 40em) {
+        .cover-container {
+            width: 100%;
+        }
+    }
+    @media (max-width: 786px) {
+        * {
+            text-align: center;
+        }
+    }
+    #header {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+    }
+    #header .text-container {
+        text-align: left;
+        position: relative;
+        display: block;
+        padding-left: 2em;
+        padding-right: 2em;
+        flex: 1;
+        max-width: 800px;
+    }
+    #header .text-container .tc-table {
+        width: 100%;
+        display: table;
+        height: auto;
+        padding-bottom: 5em;
+        padding-top: 2em;
+    }
+    @media (min-width: 787px) {
+        #header .text-container .tc-table {
+            height: 100%;
+            padding-bottom: 0;
+        }
+    }
+    #header .text-container .tc-table .editing-ttp {
+        padding: 1em;
+        font-size: 1.2em;
+    }
+    #header .text-container .tc-table .editing-app-button {
+        font-style: italic;
+        padding: 0.25em;
+        font-size: 1.2em;
+        display: inline-block;
+        border-radius: 1em;
+    }
+    #header .text-container .tc-table .editing-app-button:first-of-type {
+        margin-right: 0.5em;
+    }
+    #header .text-container h1 {
+        font-size: 2em;
+        margin-bottom: 0.25em;
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        line-height: 1.1em;
+    }
+    @media (min-width: 787px) {
+        #header .text-container h1 {
+            font-size: 3.2em;
+        }
+    }
+    #header .text-container h2 {
+        margin-top: 0.2em;
+        margin-bottom: 0.3em;
+        font-size: 1.3em;
+    }
+    @media (min-width: 787px) {
+        #header .text-container h2 {
+            font-size: 1.8em;
+        }
+    }
+    #header .device-container {
+        padding-bottom: 2em;
+        width: 100%;
+    }
+    #header .device-container img {
+        max-height: 70vh;
+        max-width: 90%;
+        position: relative;
+        margin-top: 5em;
+    }
+    @media (min-width: 787px) {
+        #header .device-container {
+            width: auto;
+            max-width: 40vw;
+            padding-bottom: 0;
+        }
+        #header .device-container img {
+            margin-top: 0;
+        }
+    }
+
+    .store-button {
+        width: auto;
+        display: inline-block;
+    }
+    .store-button:first-of-type {
+        margin-right: 12px;
+    }
+    @media (max-width: 491px) {
+        .store-button:first-of-type {
+            margin-right: 0;
+            margin-bottom: 12px;
+        }
+    }
+    .store-button:hover {
+        transition: all 0.2s ease-in-out;
+        transform: scale(1.05);
+    }
+    .store-button svg {
+        width: auto;
+        height: 100%;
+        display: block;
+        position: relative;
+    }
+    @media (max-width: 768px) {
+        .store-button {
+            margin: auto;
+        }
+    }
+
+    @media (max-width: 491px) {
+        .text-to-phone:not(.email-subscribe) {
+            display: none !important;
+        }
+    }
+    .text-to-phone input[type=tel], .text-to-phone input[type=email] {
+        transition: all 0.2s linear;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        outline: none;
+        color: #333 !important;
+        text-align: left;
+    }
+    .text-to-phone input[type=tel]:focus, .text-to-phone input[type=email]:focus {
+        border-color: var(--link-color);
+    }
+    .text-to-phone input[type=email] {
+        padding-left: 12px;
+        width: 230px;
+    }
+    .text-to-phone button, .text-to-phone input[type=submit] {
+        border-radius: 4px;
+        background: var(--link-color);
+        color: white;
+        font-size: 14px;
+        border: 0;
+        padding: 6px 8px;
+        padding-top: 7px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        outline: none;
+        cursor: pointer;
+    }
+
+    section {
+        padding: 5em 0;
+        background: white;
+    }
+    section:not(.text-section) * {
+        color: #333;
+    }
+    section h2 {
+        font-size: 2.5em;
+        color: #333;
+        padding-bottom: 0.25em;
+        margin-bottom: 0;
+    }
+
+    #screenshots .owl-nav {
+        padding-top: 3em;
+    }
+    #screenshots .owl-nav button {
+        outline: none;
+    }
+    #screenshots .owl-nav .owl-next, #screenshots .owl-nav .owl-prev {
+        font-size: 2em;
+    }
+    #screenshots .owl-nav .owl-next *, #screenshots .owl-nav .owl-prev * {
+        color: rgba(0, 0, 0, 0.25);
+    }
+    #screenshots .owl-nav .owl-prev {
+        margin-right: 1em;
+    }
+    #screenshots img {
+        border-radius: 0.5em;
+        -webkit-box-shadow: 2px 2px 10px -2px rgba(0, 0, 0, 0.49);
+        -moz-box-shadow: 2px 2px 10px -2px rgba(0, 0, 0, 0.49);
+        box-shadow: 2px 2px 5px -2px rgba(0, 0, 0, 0.49);
+    }
+    #screenshots h2 {
+        padding-bottom: 0.5em;
+        margin-bottom: 2em;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+    @media (max-width: 767px) {
+        #screenshots h2 {
+            padding-left: 0;
+            padding-right: 0;
+            display: block;
+        }
+    }
+
+    #features p {
+        font-size: 1.4em;
+    }
+    #features ul {
+        padding-left: 1em;
+        padding-top: 0.75em;
+    }
+    #features ul li {
+        list-style-type: circle;
+        font-size: 1.2em;
+        padding-bottom: 0.5em;
+    }
+    #features button {
+        transition: transform 0.2s ease-in-out;
+        padding: 0.75em 1.5em;
+        border: 0;
+        border-radius: 4px;
+        margin-top: 1em;
+        background-color: var(--background-color);
+        color: white;
+        cursor: pointer;
+    }
+    #features button:hover {
+        transform: scale(1.1);
+    }
+    #features .feature-right {
+        text-align: left;
+        padding-top: 2em;
+    }
+    #features .feature-left {
+        text-align: center;
+        padding-right: 0;
+    }
+    #features .feature-left img {
+        max-width: 100%;
+        max-height: 575px;
+    }
+    @media (min-width: 767px) {
+        #features .feature-left {
+            margin: auto;
+            padding-right: 40px;
+        }
+    }
+    @media (max-width: 767px) {
+        #features .feature-right {
+            padding-top: 4em;
+        }
+        #features ul {
+            padding-left: 0;
+        }
+        #features ul li {
+            list-style: none;
+        }
+    }
+
+    #reviews .stars {
+        width: 100%;
+        padding-bottom: 1.5em;
+    }
+    #reviews .stars svg {
+        color: #eec643;
+        height: 34px;
+        width: 34px;
+    }
+    #reviews .stars svg path {
+        fill: #eec643;
+    }
+    #reviews #quote-carousel {
+        padding: 0 80px;
+    }
+    #reviews #quote-carousel .carousel-control svg {
+        width: 14px;
+    }
+    #reviews #quote-carousel .carousel-control path {
+        fill: #999;
+    }
+    #reviews #quote-carousel .carousel-indicators {
+        margin-bottom: -1em;
+    }
+    #reviews #quote-carousel .carousel-indicators li {
+        background: #c0c0c0;
+    }
+    #reviews #quote-carousel .carousel-indicators .active {
+        background: #666;
+    }
+    #reviews blockquote {
+        position: relative;
+        font-size: 1em;
+        font-style: italic;
+        color: #666;
+        padding: 0 5%;
+        margin-bottom: 0;
+    }
+    @media (min-width: 768px) {
+        #reviews blockquote {
+            font-size: 1.6em;
+            line-height: 1.5em;
+            padding: 0 10%;
+        }
+    }
+    #reviews blockquote footer {
+        background: none !important;
+        font-size: 0.6em;
+        font-weight: 700;
+        color: #c7c6c1;
+    }
+    #reviews blockquote footer:before {
+        content: "―";
+    }
+
+    a.contact {
+        color: #999;
+    }
+
+    a.contact:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    @media (max-width: 767px) {
+        * {
+            text-align: center;
+        }
+
+        section.text-section .col-xs-12 {
+            padding: 0 15px;
+        }
+    }
+    #dl-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: white;
+        padding-top: 5em;
+        display: none;
+    }
+    #dl-loader .coffee_cup {
+        width: 20px;
+        height: 24px;
+        border: 1px #999 solid;
+        border-radius: 0px 0px 5px 5px;
+        position: relative;
+        margin: 12px auto;
+    }
+    #dl-loader .coffee_cup:after, #dl-loader .coffee_cup:before {
+        position: absolute;
+        content: "";
+    }
+    #dl-loader .coffee_cup:after {
+        width: 5px;
+        height: 12px;
+        border: 1px #999 solid;
+        border-left: none;
+        border-radius: 0px 20px 20px 0px;
+        left: 20px;
+    }
+    #dl-loader .coffee_cup:before {
+        width: 1px;
+        height: 6px;
+        background-color: #999;
+        top: -10px;
+        left: 4px;
+        box-shadow: 5px 0px 0px 0px #999, 5px -5px 0px 0px #999, 10px 0px 0px 0px #999;
+        -webkit-animation: steam 1s linear infinite alternate;
+        -moz-animation: steam 1s linear infinite alternate;
+        animation: steam 1s linear infinite alternate;
+    }
+    @-webkit-keyframes steam {
+        0% {
+            height: 0px;
+        }
+        100% {
+            height: 6px;
+        }
+    }
+    @-moz-keyframes steam {
+        0% {
+            height: 0px;
+        }
+        100% {
+            height: 6px;
+        }
+    }
+    @keyframes steam {
+        0% {
+            height: 0px;
+        }
+        100% {
+            height: 6px;
+        }
+    }
+    #dl-loader div {
+        color: #666;
+        font-size: 0.9em;
+    }</style>
+    <style>
+        .container {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        @media (min-width: 768px) {
+            .container {
+                width: 750px;
+            }
+        }
+        @media (min-width: 992px) {
+            .container {
+                width: 970px;
+            }
+        }
+        @media (min-width: 1200px) {
+            .container {
+                width: 1170px;
+            }
+        }
+    </style>
+    <style id="global_style">:root {
+        --background-color: #004AC5;
+        --text-color: #ffffff;
+        --link-color: #EEC643;
+        --linkhover-color: #005A88;
+        --main-font: 'Oxygen';
+        --backgroundgradient: True;
+        --backgroundopacity: 0.9;
+    }
+    </style>
+    <style>
+        *{
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale
+        }
+        .main-container{
+            color:#222;
+            padding:2em 0;
+            padding-bottom:4em;
+            text-align:left!important;
+            padding:2em;
+            background:#fff;
+            min-height:400px;
+            -webkit-box-shadow:0 0 3px 0 rgba(0,0,0,.25);
+            -moz-box-shadow:0 0 3px 0 rgba(0,0,0,.25);
+            box-shadow:0 0 3px 0 rgba(0,0,0,.25)
+        }
+        .main-container *{
+            text-align:left!important
+        }
+        .main-container :not(a){
+            color:#222
+        }
+        .main-container #content p{
+            margin-top:1rem;
+            margin-bottom:1rem
+        }
+        a{
+            color:#009c9c
+        }
+        a:hover{
+            color:#007bff
+        }
+        h2{
+            font-size:1.2em
+        }
+        @media only screen and (max-width:600px){
+            h2{
+                font-size:1.2em
+            }
+        }
+        a.nohover{
+            color:#fff;
+            text-decoration:none
+        }
+        @keyframes spin{
+            0%{
+                transform:rotate(0)
+            }
+            100%{
+                transform:rotate(360deg)
+            }
+        }
+        .fc123-promoclass{
+            padding:10px 20px;
+            cursor:pointer;
+            background:linear-gradient(to right bottom, #4BB3FD, #45A3E6);
+            color:#fff
+        }
+        .fc123-promoclass *{
+            font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+        }
+        .fc123-promoclass img{
+            display:inline-block;
+            margin-right:20px;
+            border-radius:8px;
+            max-height:50px
+        }
+        .fc123-promoclass .fc123-button{
+            padding:10px 30px;
+            border-radius:6px;
+            font-weight:700;
+            transition:all .2s ease-in-out;
+            cursor:pointer
+        }
+        .fc123-promoclass .fc123-button:hover{
+            background:#357ded
+        }
+        .fc123-promoclass h1{
+            width: 100%;
+            text-align:center;
+            font-size:1.8em;
+            margin:0
+        }
+        .fc123-promoclass h2{
+            text-align:center;
+            font-size:2em;
+            margin:0
+        }
+        .fc123-promoclass .subheader {
+            font-size:1.1em;
+        }
+        .fc123-pr{
+            font-size:.7em;
+            text-align:right;
+            margin-top:5px;
+            margin-bottom:5px;
+            opacity:.8;
+            margin-right:4px;
+            transition:all .2s ease-in-out
+        }
+        .fc123-pr:hover{
+            opacity:1
+        }
+        .fc123-promoclass .fc123-pc-action{
+            display: inline-block;
+        }
+
+        @media only screen and (max-width:768px){
+            .fc123-promoclass h2{
+                font-size:1.6em
+            }
+            .fc123-promoclass .subheader {
+                font-size:1.0em
+            }
+            .fc123-promoclass{
+                text-align:center!important
+            }
+            .fc123-promoclass .fc123-pc-action{
+                width: 100%;
+            }
+        }
+        @media only screen and (max-width:600px){
+            .fc123-promoclass h1{
+                font-size:1.25em;
+                text-align:center
+            }
+        }
+    </style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <meta content="website" property="og:type">
+    <meta content="守卫小精灵 - 用户隐私保护声明" property="og:title"/>
+    <!-- <meta property="og:image" content="" /> -->
+    <meta content="" property="og:description"/>
+    <meta content="" name="description"/>
+    <title>Elf Go - Privacy Policy</title>
+    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet"/>
+    </meta></meta></head>
+<body style="background:#222;margin:0;">
+<div class="main-container">
+    <h2>
+
+        守卫小精灵
+
+        &gt;用户隐私保护声明</h2>
+    <hr/>
+    <div id="content">
+       
+
+导言
+
+您在使用我们的服务时，我们可能会收集和使用您的信息。我们希望通过本《用户隐私保护声明》向您说明在您使用我们的服务时，我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。本《用户隐私保护声明》与您所使用的我们的服务息息相关，您在下载、安装、开启、浏览、注册、登录、使用我们的服务时，我们将按照本《用户隐私保护声明》收集、保存、使用、共享、披露及保护您的个人信息，因此我们也希望您能够仔细阅读，并在需要时，按照本《用户隐私保护声明》的指引，作出您认为适当的选择。本《用户隐私保护声明》之中涉及的相关技术词汇，我们尽量以简明扼要的表述向您解释，并提供了进一步说明的链接，以便您的理解。
+
+您应当仔细阅读本《用户隐私保护声明》，如果您不同意本《用户隐私保护声明》的内容，将导致我们的服务无法正常运行，我们将无法为您提供完整的产品和服务，同时也请您立即停止使用我们的服务。您使用或继续使用我们提供的服务，都表示您同意我们按照本《用户隐私保护声明》收集、使用、储存和分享、披露、保护您的信息。
+
+我们已经以字体加粗或其他合理方式提示您重点阅读本声明中与您的权益（可能）存在重大关系的条款，请您留意重点查阅。您应当在充分阅读、明确理解本声明前述加粗条款并同意本声明全部条款的有效性的前提下使用我们的产品与/或服务，您不会以我们未尽到合理提示义务为由而声称本声明中的条款非法或无效。
+
+如您在阅读本《用户隐私保护声明》过程中有任何疑惑或其他相关事宜的，我们为您提供了多种反馈渠道，具体请见本声明“如何联系我们”章节，我们会尽快为您作出解答。
+
+本《用户隐私保护声明》将帮助您了解以下内容
+
+l   本《用户隐私保护声明》适用范围、相关词语涵义
+
+l   我们可能收集的信息
+
+l   个人信息的存储地址和期限
+
+l   我们如何使用您的信息
+
+l   如何访问和控制您的信息
+
+l   我们如何分享、保留、储存和保护您的信息
+
+l   我们的安全措施
+
+l   安全事件通知
+
+l   广告、第三方服务
+
+l   未成年人保护
+
+l   争议解决
+
+l   COOKIE政策
+
+l   如何联系我们
+
+l   其他
+
+本《用户隐私保护声明》适用范围
+
+当您使用本单位及本单位关联公司的任何产品和服务时，本《用户隐私保护声明》即适用，无论该产品和服务是否单独设置了隐私条款，也无论您是浏览用户（访客）还是注册登录用户。请您注意，本《用户隐私保护声明》不适用于以下情况：
+
+l   通过在我们服务中进行广告服务的其他公司和机构所收集的信息。
+
+l   我们的服务可能会包含或链接至第三方提供的信息与/或第三方服务（包括任何第三方应用、网站、产品、服务等），这些信息与/或服务由第三方负责运营，您使用该信息与/或服务与我们无关。我们在此善意的提醒您，您在使用第三方信息与/或服务时，应留意和仔细阅读第三方向您展示的相关用户协议和隐私政策，并妥善保管和谨慎提供您的个人信息。本《用户隐私保护声明》仅适用于我们所收集的您的个人信息，并不适用于任何第三方对您的个人信息的收集，以及任何第三方提供的服务或第三方的信息使用规则，我们对任何第三方收集、储存和使用的您个人信息的行为在法律允许的范围内亦不承担任何责任；
+
+l   其他非本单位及本单位关联公司向您提供的产品与/或服务内容。
+
+相关词语涵义
+
+l   我们的服务：包括本单位及本单位关联公司提供的软件、网站、服务（含站外服务，例如我们的广告服务和“通过我们的服务申请或分享”的插件），包括但不限于PC端、移动终端等。
+
+l   个人信息（出自于GB/T 35273-2020《信息安全技术 个人信息安全规范》）：指以电子或者其他方式记录的能够单独或者与其他信息结合识别特定自然人身份或者反映特定自然人活动情况的各种信息。如在您使用我们的服务时，我们可能会收集如下您的如下个人信息，包括网络身份识别信息（如账户名、账户昵称、邮箱地址以及与前述有关的密码与密码保护问题和答案）、联系电话、交易信息、个人上网记录（网络浏览记录、点击记录等）等。
+
+l   个人敏感信息（出自于GB/T 35273-2020《信息安全技术 个人信息安全规范》）：指一旦泄露、非法提供或滥用可能危害人身和财产安全，极易导致个人名誉、身心健康受到损害或歧视性待遇等的个人信息，包括个人身份信息、银行账号、通信记录和内容、财产信息、交易信息、不满14 周岁未成年的个人信息等。您同意您的个人敏感信息按本《用户隐私保护声明》所述的目的和方式来处理。
+
+相比其他个人信息，个人敏感信息受到更加严格的保护，请您注意，您在我们的服务中所提供、上传或发布的内容和信息，可能会泄露您的个人敏感信息。您需要谨慎地考虑，是否使用我们的服务披露您的个人敏感信息。
+
+l   儿童：指不满十四周岁的未成年人。（出自于《儿童个人信息网络保护规定》）
+
+l   未成年人：不满十八周岁的自然人为未成年人。十六周岁以上的未成年人，以自己的劳动收入为主要生活来源的，视为完全民事行为能力人。（出自于《中华人民共和国民法典》）
+
+l   授权同意：是指您对您的个人信息进行特定处理做出明确授权的行为，包括通过积极的行为作出授权（即明示同意），也包括通过消极的不作为而作出授权。（出自于GB/T35273-2020 《信息安全技术 个人信息安全规范》）请您知悉，“授权同意”在本政策中有时亦表述为“授权”、“同意”。
+
+l   用户画像：通过收集、汇聚、分析个人信息，对您的个人特征，如职业、经济、教育、个人喜好、信用、行为等方面作出分析或预测，形成其个人特征模型的过程。（出自于B/T35273-2020 《信息安全技术 个人信息安全规范》）
+
+l   匿名化：指通过对个人信息的技术处理，使得个人信息主体无法被识别或者被关联到，且处理后的信息不能被复原的过程。（出自于GB/T 35273-2020《信息安全技术 个人信息安全规范》）
+
+l   去标识化：指通过对个人信息的技术处理，使其在不借助额外信息的情况下，无法识别或关联到个人信息主体的过程。（出自于GB/T 35273-2020《信息安全技术 个人信息安全规范》）
+
+l   删除：指在实现日常业务功能所涉及的系统中去除个人信息的行为，使其保持不可被检索、访问的状态。（出自于GB/T 35273-2020《信息安全技术 个人信息安全规范》）
+
+l   共享信息：指您在我们的服务中自愿与您的社交网络及使用该服务的所有用户公开分享的有关您的信息，或其他方分享的与您有关的信息，例如，他们上传或发布的信息包含有关您的信息，以及他们发送给您和其他使用我们服务的用户的通讯信息之中包含的有关您的信息。
+
+l   非个人身份信息：指任何与您有关但实际上不可直接或间接辨认您身份的信息，包括以汇集、匿名或化名方式提供的个人信息。您知悉并同意，无法识别出您的个人身份的信息不属于个人信息。
+
+我们可能收集的信息
+
+我们提供服务时，为了用于您注册、登录、开通和使用服务功能、绑定账号、消费支付等功能，可能会收集、储存和使用下列与您有关的信息。如果您不提供相关信息，可能无法注册成为我们的用户、享受我们提供的某些服务，或者即便我们可以继续向您提供一些服务，也无法达到该服务拟达到的效果。
+
+您提供的信息
+
+l   您在注册我们的账号时，主动向我们提供的相关个人信息，例如昵称、账户密码、姓名、性别、照片、您本人的电话号码、电子邮箱等；
+
+l   您在我们的产品或服务中准备消费支付或进行其他交易、金融行为时，主动向我们提供的相关个人信息，例如姓名、性别、身份证件号码、银行卡号、交易账单信息等；
+
+l   您在使用我们的客服、产品或服务的售后功能时，主动向我们提供的账户相关信息、交易账单信息等；
+
+l   您知悉，为满足相关法律法规政策及相关主管部门的要求，我们的用户需进行实名认证以继续使用和享受我们的服务。我们会在获得您同意或您主动提供的情况下收集您的实名身份信息（包括姓名、身份证号、照片等信息），该信息属于敏感信息，拒绝提供实名身份信息可能会限制我们为您提供更多的服务；
+
+l   您通过我们的服务向其他方提供的共享信息，以及您使用我们的服务时所储存的信息，例如当您通过我们的服务发布文字或上传图片、联系人信息等时，我们会收集这些数据；
+
+l   若您以其他方式关联登录、使用我们的服务，我们会向第三方请求您的个人信息，对于我们需要但第三方无法提供的个人信息，我们仍会要求您提供。如果您拒绝提供，将可能导致您无法正常使用我们的服务的某些功能。
+
+l   您在使用我们的产品/服务时，向我们提供的其他信息。
+
+其他方分享的您的相关信息
+
+l   其他方使用我们的服务时所提供有关您的共享信息，例如其他人可以在我们的服务中发布与您相关的内容，如评论、动态、图片、照片、视频、通讯录等；
+
+l   当您使用我们的关联公司、合作伙伴的服务时，他们在您的授权下可能向我们分享您的相关信息；
+
+l   在获得您的同意后，我们可能从第三方获取您授权共享的账户信息（如头像、昵称等），并在您同意本《用户隐私保护声明》后将您的第三方账户与我们的服务账户绑定，使您可以通过第三方账户直接登录并使用我们的服务。我们将会依据与第三方的约定、对个人信息来源的合法性进行确认后，在符合相关法律法规规定的前提下，使用从第三方获得的您的个人信息。
+
+我们获取的您的信息
+
+您使用我们服务时我们可能收集如下信息：
+
+l   日志信息指您使用我们服务时，系统可能会通过cookie、web beacon或其他方式自动采集的技术信息，包括：
+
+Ø  设备或软件信息，例如您的移动设备、网页浏览器或您用于接入我们的服务的其他程序所提供的配置信息、您的IP地址和您的移动设备所用的版本和设备识别码等；
+
+Ø  您在使用我们服务时搜索和浏览的信息，例如您使用的网页搜索词语、访问的社交媒体页面url地址、浏览或点击服务内的广告、分享视频，以及您在使用我们服务时浏览或要求提供的其他信息和内容详情；
+
+Ø  有关您曾使用的移动应用（APP）和其他软件的信息，以及您曾经使用该等移动应用和软件的信息；
+
+Ø  您通过我们的服务进行通讯的信息，例如曾通讯的账号，以及通讯时间、数据和时长；
+
+Ø  您通过我们的服务分享的内容所包含的信息（元数据），例如拍摄或上传的共享照片或录像的日期、时间或地点等；
+
+Ø  网络信息，例如使用的移动网络运营商网络数据信息、WIFI信号信息、宽带数据信息等。
+
+l   位置信息指您开启设备定位功能并使用我们基于位置提供的相关服务时，我们收集的有关您位置的信息，包括：
+
+Ø  您通过具有定位功能的移动设备使用我们的服务（例如本地推送等）时，在获得您的授权后，我们通过GPS或WiFi等方式收集的您的地理位置信息；
+
+Ø  您或其他用户提供的包含您所处地理位置的实时信息，例如您提供的账号信息中包含的您所在地区信息，您或其他人上传的显示您当前或曾经所处地理位置的共享信息，例如您或其他人共享的照片包含的地理标记信息；
+
+Ø  您可以通过关闭定位功能随时停止我们对您的地理位置信息的收集。
+
+l   通讯录信息指您使用我们的特定功能（例如用于平台上的借钱业务等）时，在获得您的授权后，我们仅会收集对您的通讯录信息进行不可逆加密后的信息。上述信息属于个人敏感信息，拒绝提供该信息仅会使您无法使用上述功能，但不影响您正常使用我们的服务的其他功能。此外，您可随时关闭相关功能；
+
+l   录音、录像、照片信息指您使用我们的特定功能（例如语音搜索、扫码、拍照等）时，在获得您的授权后，我们收集的信息。拒绝提供该信息仅会使您无法使用上述功能，但不影响您正常使用我们的服务的其他功能。此外，您可随时关闭相关功能；
+
+l   您在游戏中的相关操作信息、游戏信息等信息，包括但不限于您的登录状态、对战信息/状态、成就信息等；（您同意我们可将该等信息向您本人或其他用户或好友展示）
+
+l   其他。
+
+其他
+
+我们希望提供给您的服务是完善的，所以我们会不断改进我们的服务，包括技术。这意味着我们的服务可能会经常推出新功能，可能需要收集新的信息。如果我们收集的个人数据或使用方式出现重大变化或调整，我们会通过适当的方式通知您并且可能会修订本《用户隐私保护声明》。
+
+个人信息的存储
+
+l   存储地点：我们依照法律法规的规定，将您的个人信息存储于中华人民共和国境内（包含港澳台）。
+
+l   存储期限：除法律或相关法规另有约定外，我们在为提供我们的服务之目的所必需的期间内保留您的个人信息，但您要求我们立即删除或注销账户的、或法律法规另有规定的除外。对于已匿名化的信息的存储期限和处理，我们无需取得您的授权同意，也无需做出通知。
+
+我们如何使用您的信息
+
+我们可能将在向您提供服务的过程之中所收集的信息用作下列用途：
+
+l   用于数据分析和研发，以便向您提供更加优质的服务；
+
+l   在我们提供服务时，用于身份验证、客户服务、安全防范、诈骗监测、存档和备份用途，确保我们向您提供的产品和服务的安全性；
+
+l   帮助我们设计新服务，改善我们现有服务；
+
+l   使我们更加了解您如何接入和使用我们的服务，从而针对性地回应您的个性化需求，为您提供定制化服务，例如语言设定、位置设定、个性化的帮助服务和指示，或对您和其他使用我们服务的用户作出其他方面的回应；
+
+l   在服务内外向您提供定制的与您更加相关的广告以替代普遍投放的广告；
+
+l   评估我们服务中的广告和其他促销及推广活动的效果，并加以改善；
+
+l   软件认证或管理软件升级；
+
+l   让您参与有关我们产品和服务或通过我们的产品和服务发起的调查，是否参与调查将由您全权决定，并且由您自行选择提供哪些信息；
+
+l   处于安全、合法调查等目的；
+
+l   我们可能使用您的数据做数据汇总、分析、挖掘（包括商业化利用），但这些信息都采用匿名的方式，不能识别您的身份。
+
+为了让我们的用户有更好的体验、改善我们的服务或您同意的其他用途，在符合相关法律法规的前提下（涉及个人隐私信息的需额外在您授权同意后），我们可能将通过我们的某一项服务所收集的个人信息，以汇集信息或者个性化的方式，用于我们或我们合作方的其他服务，并可自行或授权第三方对我们收集的数据进行分析。例如，在您使用我们的一项服务时所收集的您的个人信息，可能在另一服务中用于向您提供特定内容或向您展示与您相关的、而非普遍推送的信息。如我们在相关服务之中提供了相应选项，您也可以主动要求我们将您在该服务所提供和储存的个人信息用于我们或我们合作方的其他服务。
+
+请您注意，除非您删除或撤回同意（即通过系统设置拒绝我们的收集和使用），您在使用我们的服务时所提供的所有个人信息，将在您使用我们的服务期间持续授权我们在符合本《用户隐私保护声明》的范围内使用。在您注销账号后，我们将停止为您提供我们的服务，根据您的要求删除您的个人信息，或做匿名化处理，但法律法规另有规定的除外。
+
+针对某些特定服务的特定用户隐私保护声明将更具体地说明我们在该等服务中如何使用您的信息。
+
+如何访问和控制您的信息
+
+您对我们服务中的您的个人信息享有多种方式的控制权，包括：您可以访问、更正/修改、删除您的个人信息，也可以撤回之前作出的对您个人信息的同意，同时您也可以注销您的账号。为便于您行使您的上述控制权，我们在服务的相关功能页面为您提供了操作指引和操作设置，您可以自行进行操作，如您在操作过程中有疑惑或困难的可以通过文末的方式联系我们来进行控制，我们会及时为您处理。
+
+访问权
+
+原则上您可以通过如下方式访问您的个人信息：
+
+l   账号信息：您可以随时登录您的个人账号，访问或编辑您的账号中的个人资料信息、更改您的密码、添加安全信息、进行账号关联或身份认证等；
+
+l   使用信息：您可以在本单位网站、客户端等服务中查阅或清除您的播放记录、搜索记录、上传内容、订单信息等；
+
+l   其他信息：如您在此访问过程中遇到操作问题的或如需获取其他前述无法获知的个人信息内容，您可通过本《用户隐私保护声明》文末提供的方式联系我们，我们将在核实您的身份后提供，但法律法规另有约定的除外。
+
+更正权
+
+经对您的身份进行验证，且更正不影响信息的客观性和准确性的情况下，您有权对错误或不完整的信息作出更正或更新，您可以自行在本单位网站或客户端中进行更正，或在特定情况下，尤其是数据错误时，通过我们公布的反馈与报错等措施将您的更正申请提交给我们，要求我们更正或更新您的数据，但法律法规另有规定的除外。但出于安全性和身份识别的考虑，您可能无法修改注册时提交的某些初始注册信息。
+
+删除权
+
+您可以向我们提出删除您个人信息的请求，例如您不再需要我们继续为您提供服务，但已做数据匿名化处理或法律法规另有规定的除外。
+
+索取权
+
+如您需要您的个人数据的副本，您可以通过本《用户隐私保护声明》文末提供的方式联系我们，在核实您的身份后，我们将向您提供您在我们的服务中的个人信息副本（例如基本资料、身份信息），但法律法规另有规定的除外。
+
+撤回同意权
+
+如您想更改相关功能的授权范围（例如位置、通讯录、相机），您可以通过您的硬件设备修改个人设置、或在我们的产品或服务中的相关功能设置界面进行操作处理。如您在此过程中遇到操作问题的，可以通过本《用户隐私保护声明》文末提供的方式联系我们。
+
+当您取消相关个人信息收集的授权后，我们将不再收集该信息，也无法再为您提供上述与之对应的服务；但您知悉并同意，除非您行使前述“删除权”，否则您的该行为不会影响我们基于您之前的授权进行的个人信息的处理、存储。
+
+提前获知产品和服务停止运营权
+
+本单位愿一直陪伴您，若因特殊原因导致本单位部分或全部产品和服务被迫停止运营，我们将提前60日在产品或服务的主页面或站内信或向您发送电子邮件或其他合适的能触达您的方式通知您，并将停止对您个人信息的收集，同时会按照法律规定对所持有的您的个人信息进行删除或匿名化处理等，法律法规另有规定的除外。
+
+例外情形
+
+以下情况下收集您的个人信息无需您的授权同意，且我们可能不会响应您提出的更正、删除、注销、撤销、索取信息的请求：
+
+l   与国家安全、国防安全有关的；
+
+l   与公共安全、公共卫生、重大公共利益有关的；
+
+l   与犯罪侦查、起诉、审判和执行判决等有关的；
+
+l   所收集的信息是您自行向社会公开的或者是从合法公开的渠道中收集到的；
+
+l   实现我们的服务所必需的；
+
+l   我们有充分证据表明您存在主观恶意或滥用权利的（如您的请求将危害公共安全和其他人合法权益，或您的请求超出了一般技术手段和商业成本可覆盖的范围）；
+
+l   响应个人信息主体的请求将导致个人信息主体或其他个人、组织的合法权益受到严重损害的；
+
+l   对收集的个人信息经进行去标识化处理的；
+
+l   为合法的新闻报道所必需的；
+
+l   法律法规规定的其他情形。
+
+我们如何分享您的信息
+
+    您同意，我们可能与我们的关联公司、合作伙伴分享您必要的个人信息，以提供和发展我们的产品和服务。除以下情形外，未经您同意，我们以及我们的关联公司不会与任何第三方分享您的个人信息：
+
+l   我们以及我们的关联公司可能将您的个人信息与我们的关联公司、合作伙伴及第三方服务供应商、承包商及代理（例如代表我们发出电子邮件或推送通知的通讯服务提供商、以及为我们提供位置数据的地图服务供应商、比如在您购买我们平台的产品时，我们必须与产品提供商、物流服务提供商共享您的个人信息才能安排送货，或者安排合作伙伴提供服务）分享（他们可能并非位于您所在法域），用作下列用途：
+
+Ø  向您提供我们的服务；
+
+Ø  实现“我们如何使用您的信息”部分所述目的；
+
+Ø  履行我们在相关用户协议或本《用户隐私保护声明》中的义务和行使我们的权利；
+
+Ø  理解、维护和改善我们的服务。
+
+如我们或我们的关联公司与任何上述第三方分享您的个人信息，我们将努力确保该等第三方在使用您的个人信息时遵守本《用户隐私保护声明》及我们要求其遵守的其他适当的保密和安全措施，我们会对其数据安全能力与环境进行调查，与其签署严格的保密协定，并只会分享特定用途所必要的个人信息。
+
+l   随着我们业务的持续发展，我们以及我们的关联公司有可能进行合并、收购、资产转让或类似的交易，而您的个人信息有可能作为此类交易的一部分而被转移，我们会要求新持有人继续遵守该《用户隐私保护声明》，否则我们将要求其重新获取您的授权。
+
+l   我们或我们的关联公司还可能为以下需要保留、保存或披露您的个人信息：
+
+Ø  事先已获得您的授权同意或符合您签署的其他文件（如本《用户隐私保护声明》）的约定；
+
+Ø  遵守适用的法律法规；
+
+Ø  遵守法院命令或其他法律程序的规定；
+
+Ø  遵守相关政府机关的要求；
+
+Ø  与国家安全、国防安全、公共安全、公共卫生、公共利益直接相关的；
+
+Ø  从合法公开披露的信息中收集个人信息的，如合法的新闻报道、政府信息公开等渠道；
+
+Ø  我们认为为遵守适用的法律法规、维护社会公共利益、或保护我们或我们的集团公司、我们的客户、其他用户或雇员的人身和财产安全或合法权益所合理必需的；
+
+Ø  法律法规规定的其他情形。
+
+我们如何保留、储存和保护您的信息
+
+我们仅在本《用户隐私保护声明》所述目的所必需期间和法律法规要求的时限内保留您的个人信息。
+
+我们使用各种安全技术和程序，以防信息的丢失、不当使用、未经授权阅览或披露。例如，在某些服务中，我们将利用加密技术（例如SSL）来保护您向我们提供的个人信息。但请您谅解，由于技术的限制以及风险防范的局限，即便我们已经尽量加强安全措施，也无法始终保证信息百分之百的安全。您需要了解，您接入我们的服务所用的系统和通讯网络，有可能因我们可控范围外的情况而发生问题。
+
+我们的安全措施
+
+我们会以“最少够用”原则收集、使用、存储和传输用户信息，并通过在本《用户隐私保护声明》及本单位的相关用户协议告知您相关信息的使用目的和范围；
+
+本单位非常重视信息安全，本单位成立了专责团队负责研发和应用多种安全技术和程序等，我们会对安全管理负责人和关键安全岗位的人员进行安全考核，我们建立了完善的信息安全管理制度和内部安全事件处置机制等，我们会采取适当的符合业界标准的安全措施和技术手段存储和保护您的个人信息，以防止您的信息丢失、受到被未经授权的访问、使用、毁损或泄漏。根据我们的安全管理制度，个人信息泄露、毁损或丢失事件被列为重大安全事件，一经发生将启动公司紧急预案，由技术部、政府关系部、法务部等多个部门组成联合应急响应小组处理；
+
+我们会对员工进行数据安全的意识培养和安全能力的培训和考核，会对处理个人信息的员工进行身份认证及权限控制，并会与接触您个人信息的员工、合作伙伴签署保密协议，明确岗位职责及行为准则，若有违反保密协议的行为，会被立即终止与本单位的合作关系，并会被追究相关法律责任，对接触个人信息人员在离岗时也提出了保密要求。
+
+我们提醒您注意，当您通过本单位提供的服务中嵌入的第三方社交软件、电子邮件、短信等与其他用户交互您的相关个人信息时，不确定第三方软件对信息的传递是否完全加密，注意确保您个人信息的安全。
+
+我们也请您理解，在互联网行业由于技术的限制和飞速发展以及可能存在的各种恶意攻击手段，即便本单位竭尽所能加强安全措施，也不可能始终保证信息的百分之百安全。请您了解，您使用我们的产品和/或服务时所用的系统和通讯网络，有可能在本单位控制之外的其他环节而出现安全问题。因此，我们强烈建议您采取积极措施保护个人信息的安全，包括但不限于使用复杂密码、定期修改密码、不将自己的账号密码等个人信息透露给他人。
+
+安全事件通知
+
+我们会制定网络安全事件应急预案，及时处置系统漏洞、计算机病毒、网络攻击、网络侵入等安全风险，在发生危害网络安全的事件时，我们会立即启动应急预案，采取相应的补救措施，并按照规定向有关主管部门报告。
+
+个人信息泄露、毁损、丢失属于公司级特大安全事件，我们会负责定期组织工作组成员进行安全预案演练，防止此类安全事件发生，若一旦不幸发生，我们将按照最高优先级启动应急预案，组成紧急应急小组，在最短时间内追溯原因并减少损失。
+
+如不幸发生个人信息安全事件后，我们将按照法律法规的要求，及时向您告知安全事件的基本情况和可能的影响、我们已采取或将要采取的处理措施、您可自主防范和降低的风险的建议、对您的补救措施等。我们将及时将事件相关情况以站内通知、短信通知、电话、邮件等您预留的联系方式告知您，难以逐一告知时我们会采取合理、有效的方式发布公告。
+
+有关共享信息的提示
+
+我们的多项服务可让您不仅与您的社交网络、也与使用该服务的所有用户公开分享您的相关信息，例如，您在我们的服务中所上传或发布的信息（包括您公开的个人信息、您建立的名单）、您对其他人上传或发布的信息作出的回应，以及包括与这些信息有关的位置数据和日志信息。使用我们服务的其他用户也有可能分享与您有关的信息（包括位置数据和日志信息）。特别是我们的社交媒体服务，是专为使您可以与世界各地的用户共享信息而设计，从而使共享信息可实时、广泛的传递。只要您不删除共享信息，有关信息便一直留存在公众领域；即使您删除共享信息，有关信息仍可能由其他用户或不受我们控制的非关联第三方独立地缓存、复制或储存，或由其他用户或该等第三方在公众领域保存。
+
+因此，请您认真考虑您通过我们的服务上传、发布和交流的信息内容。在一些情况下，您可通过我们某些服务的隐私设定来控制有权浏览您的共享信息的用户范围。如您要求从我们的服务中删除您的个人信息，请通过该等特别服务条款提供的方式操作。
+
+COOKIE、日志档案和WEB BEACON
+
+我们和第三方合作伙伴可能通过cookie和web beacon收集和使用您的信息，并将该等信息储存为日志信息。
+
+我们使用自己的cookie和web beacon，目的是为您提供更个性化的用户体验和服务，并用于以下用途：
+
+l   记住您的身份。例如：cookie和web beacon有助于我们辨认您作为我们的注册用户的身份，或保存您向我们提供有关您的喜好或其他信息；
+
+l   分析您使用我们服务的情况。我们可利用cookie和web beacon来了解您使用我们的服务进行什么活动、或哪些网页或服务最受欢迎；
+
+l   广告优化。Cookie和web beacon有助于我们根据您的信息，向您提供与您相关的广告而非进行普遍的广告投放。
+
+我们为上述目的使用cookie和web beacon的同时，可能将通过cookie和web beacon收集的非个人身份信息汇总提供给广告商和其他伙伴，用于分析您和其他用户如何使用我们的服务并用于广告服务。
+
+我们的产品和服务上可能会有广告商和其他合作方放置的cookie和web beacon。这些cookie和web beacon可能会收集与您相关的非个人身份信息，以用于分析用户如何使用该等服务、向您发送您可能感兴趣的广告，或用于评估广告服务的效果。这些第三方cookie和web beacon收集和使用该等信息不受本《用户隐私保护声明》约束，而是受到其自身的用户隐私保护声明约束，我们不对第三方的cookie或web beacon承担责任。
+
+您可以通过浏览器或用户选择机制拒绝或管理、删除cookie或web beacon。但请您注意，如果您停用cookie或web beacon，我们有可能无法为您提供最佳的服务体验，某些服务也可能无法正常使用。同时，您仍然将收到同样数量的广告，只是这些广告与您的相关性会降低。
+
+广告
+
+我们可能使用您的信息，向您提供与您更加相关的广告。
+
+我们也可能使用您的信息，通过我们的服务、电子邮件或其他方式向您发送营销信息，提供或推广我们或第三方的如下商品和服务：
+
+l   我们的商品和服务，以及我们的关联公司和合营伙伴的商品和服务，包括即时通讯服务、网上媒体服务、互动娱乐服务、社交网络服务、付款服务、互联网搜索服务、位置和地图服务、应用软件和服务、数据管理软件和服务、网上广告服务、互联网金融及其他社交媒体、娱乐、电子商务、资讯及通讯软件和服务（“互联网服务”）；
+
+l   第三方互联网服务供应商，以及与下列有关的第三方商品和服务：食物和餐饮、体育、音乐、电影、电视、现场表演和其他艺术和娱乐、书册、杂志和其他刊物、服装和配饰、珠宝、化妆品、个人健康和卫生、电子、收藏品、家用器皿、电器、家居装饰和摆设、宠物、汽车、酒店、交通和旅游、银行、保险及金融服务、会员积分和奖励计划，以及我们认为可能与您相关的其他商品和服务。
+
+如您不希望我们将您的个人信息用作前述广告用途，您可以通过我们在广告中提供的相关指示、或在特定服务中提供的选择机制，要求我们停止为上述用途使用您的个人信息。
+
+我们向您发送的邮件和信息
+
+邮件和信息推送
+
+您使用我们服务时，我们可能使用您的信息向您的设备发送电子邮件、新闻或推送通知。如您不希望收到这些信息，您可以按照我们向您发出的电子邮件所述指示，在设备上选择取消订阅。
+
+与服务有关的公告
+
+我们可能在必需时（例如当我们由于系统维护而暂停某一项服务时）向您发出与服务有关的公告。您可能无法取消这些与服务有关、性质不属于推广的公告。
+
+我们服务中的第三方服务
+
+我们的服务可能包括或链接至第三方提供的社交媒体或其他服务（包括网站）。例如：
+
+l   您可利用 “分享”键将某些内容分享到我们的服务，或您可利用第三方连线服务登录我们的服务。这些功能可能会收集您的信息（包括您的日志信息），并可能在您的电脑装置cookie，从而正常运行上述功能；
+
+l   我们通过广告或我们服务的其他方式向您提供链接，使您可以接入第三方的服务或网站。
+
+该等第三方社交媒体或其他服务可能由相关的第三方或我们运营。您使用该等第三方的社交媒体服务或其他服务（包括您向该等第三方提供的任何个人信息），须受第三方自己的服务条款及用户隐私保护声明（而非《通用服务条款》或本《用户隐私保护声明》）约束，您需要仔细阅读其条款。本《用户隐私保护声明》仅适用于我们所收集的任何信息，并不适用于任何第三方提供的服务或第三方的信息使用规则，而我们对任何第三方使用由您提供的信息不承担任何责任。
+
+未成年人保护
+
+如未满十四周岁的未成年人使用我们的服务前，应在监护人监护、指导下共同阅读并同意本《用户隐私保护声明》，且应在监护人明确同意和指导下提交个人信息；已满十四周岁未满十八周岁的未成年人应在自己与监护人共同明确同意和监护人指导下提交个人信息。我们根据国家相关法律法规的规定保护未成年人的个人信息，只会在法律允许、监护人明确同意或保护未成年人所必要的情况下收集、使用、共享、转让或披露未成年人个人信息；如果我们发现未成年人在未事先获得其监护人同意的情况下使用了我们的服务的，我们会尽最大努力与监护人取得联系，并在监护人要求下尽快删除相关未成年人个人信息。
+
+
+《COOKIE政策》
+
+Cookie
+
+包含字符串的小文件，在您访问网站或其他网络内容时发送到您的计算机、移动电话或其他装置内。
+
+Web Beacon
+
+装嵌在网站或电邮之内的电子影像档案或其他技术，可用于计算访客数目、记录是否及何时浏览电邮或网站、或使用某些cookie。
+
+我们可不时使用cookie和网络信标（以及其他类似技术）来收集、使用和储存有关您的数据。 本政策描述了我们如何使用该等cookie和网络信标。
+
+请注意，我们根据本身的《用户隐私保护声明》以收集、使用和储存您的数据。本《用户隐私保护声明》加载我们的《用户隐私保护声明》之内，构成该等条款的一部份；您已为使用我们的服务而同意该等条款。本政策所用词语与我们的《用户隐私保护声明》所定义的词语具有相同的涵义。
+
+什么是cookie和网络信标？
+
+Cookie是载有一连串文字的小型档案，在您登入网站或其他网络内容时存放在您的移动电话或其他移动装置内。网络信标是装嵌在网站或电邮内的电子图像文件案或其他技术，可用于计算访客数目、记录何时阅览电邮或网站，以及有没有阅览电邮或网站，或使用某些cookie。
+
+我们如何使用cookie和网络信标？
+
+我们和第三方追踪实用伙伴可不时透过cookie和网络信标自动收集若干数据，并将该等数据储存为日志数据。
+
+我们使用本身的cookie和网络信标，目的是令您所享用的服务体验更个人化，此外亦作下列用途，包括：
+
+l   记下您的身份。例如：cookie和网络信标有助我们识别您作为我们服务注册用户的身份，或保存您先前向我们提供有关您的喜好或其他的数据；
+
+l   分析您如何使用我们的服务。我们可利用cookie和网络信标来了解用户在我们的服务进行什么活动，或哪些网页或环节最受欢迎；
+
+l   用作广告宣传。Cookie和网络信标亦有助我们根据您的资料，向您提供我们认为与您有关的广告宣传（在我们的《用户隐私保护声明》内题为「我们如何使用您的数据」和「直接促销」的两节中有较详细的讨论）；
+
+请注意，我们为此等目的使用cookie和网络信标，但亦可透过此等cookie和网络信标将汇集所得的若干非个人资料提供给广告商和其他伙伴，以分析您和其他用户如何使用我们的服务并用作宣传用途。
+
+我们亦允许广告商和其他伙伴将本身的cookie和网络信标存放在我们某些服务，以分析用户如何使用此等服务并用作宣传用途。必须注意的是这些第三方cookie和网络信标受相关的第三方本身的用户隐私保护声明的约束，而非受我们的《用户隐私保护声明》的约束。我们不对第三方的cookie或网络信标承担责任。
+
+特定种类的cookie
+
+我们在下文会更详细地描述我们如何使用特定种类的cookie。这些cookie可能会有部份或全部储存入您的浏览器。
+
+您的浏览器可让您可以拒绝或管理cookie或网络信标。然而，请您谨记，如果您拒绝cookie，我们有可能未能透过我们的服务令您获得最佳的服务体验，而某些服务亦可能未能妥善运作。
+
+Cookie的各种用途
+
+描述
+
+认证
+
+认证 这些cookie通知我们您何时登入我们的服务，以便我们提供适合您的服务和体验。
+
+例如：当您登入本单位的服务时，这些cookie会通知我们，让我们识别您是否已安全地登入该服务，并显示仅与您有关的资料。
+
+您的喜好设定
+
+这些cookie让我们记录您的个人化版面格式、外观设计和其他个人设定，有助我们提供切合您个人需要的服务。
+
+例如：我们使用cookie来记录您是否已阅读我们向您发出的若干讯息或提示，以免重发，并有助储存您的参数设定（如字体大小），当您再使用有关服务时，可以自动调节到您的喜好设定。
+
+安全性
+
+我们使用这些cookie来保护您的数据和我们的服务安全性，并防止欺诈、刑事或其他涉嫌的犯罪行为。
+
+例如：这些cookie可以识别您是否在我们的正常位置登入我们的服务，并且防止您的数据被盗用，识别偷窃行为。
+
+功能
+
+我们使用这些cookie来执行我们的服务功能，并提升有关功能。
+
+例如：这些cookie让我们在服务内的登入或其他适当栏目，预先填写您的账号数据，方便您使用我们的服务。
+
+效率
+
+我们使用这些cookie来提升我们的服务速度、表现和效率。
+
+例如：这些cookie促进服务器之间的路由器讯息流通，并查核不同用户使用我们的服务时的登载速度。我们有时亦可用cookie在服务器暂存数据，从而加快您使用我们的服务时的登载和响应速度。
+
+分析和研究
+
+我们使用这些cookie来跟进我们的服务表现和提升服务水平，这些cookie也为我们提供了研发新服务或功能的参考数据。
+
+例如：cookie让我们对如何使用我们的服务有更深入的认识，因此有助我们提升您和其他用户的体验。该等数据报括您登入我们的服务时于每一程序所耗用的时间、您使用我们的服务时进行了什么程序，以及您使用我们的服务时曾经查阅哪些网页和使用了什么功能。
+
+改善广告宣传
+
+我们使用这些cookie来改善广告宣传，确保该等服务切合您所需。
+
+例如：这些cookie让我们显示更适合您的宣传讯息，并追踪您是否已在我们的服务内阅读若干宣传讯息及继而进入该等广告商的网页。同样地，我们的伙伴可以使用 cookie来确定我们是否已显示某宣传讯息，并确定该宣传讯息的效力，而这些cookie也提供了您与该等广告商的互动数据。
+
+
+其他
+
+l   本《用户隐私保护声明》的标题仅为方便及阅读而设，并不影响正文其中任何规定的含义或解释。
+
+l   本《用户隐私保护声明》的版权为我们所有，在法律允许的范围内，我们保留最终解释和修改的权利。
+
+    </div>
+</div>
+</body>
+</html>
